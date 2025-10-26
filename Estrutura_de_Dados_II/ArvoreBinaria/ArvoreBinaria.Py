@@ -22,6 +22,22 @@ class ArvoreBinaria:
             return self._pertence_rec(nodo.dir, valor)
         else:
             return True
+        
+    # --- NÍVEL ---
+    def nivel(self, valor, n=0):
+        if self.pertence(valor):
+            return self._nivel_rec(self.raiz, valor, n)           
+        else:
+            return -1
+        
+
+    def _nivel_rec(self, nodo, valor, n):
+        if valor < nodo.conteudo:
+            return self._nivel_rec(nodo.esq, valor, n=n+1)
+        elif valor > nodo.conteudo:
+            return self._nivel_rec(nodo.dir, valor, n=n+1)
+        else:
+            return n    
 
     # --- INSERIR ---
     def inserir(self, valor):
@@ -80,7 +96,16 @@ class ArvoreBinaria:
         if nodo.esq is None or nodo.dir is None:
             return False
         return self.completa(nodo.esq, True) and self.completa(nodo.dir, True)
-            
+    
+    # --- ALTURA ---
+    def altura(self, nodo=None, interno=False):
+        if not interno:
+            nodo = self.raiz
+        if nodo is None:
+            return -1  # árvore vazia → altura -1 (ou 0, se quiser contar nós)
+        altura_esq = self.altura(nodo.esq, True)
+        altura_dir = self.altura(nodo.dir, True)
+        return 1 + max(altura_esq, altura_dir)
 
     # --- VISUALIZAÇÃO ---
     def mostrar(self, nodo=None, nivel=0, interno=False):
@@ -143,7 +168,7 @@ class ArvoreBinaria:
 # --------------------------------------
 if __name__ == "__main__":
     arv = ArvoreBinaria()
-    for valor in [8, 3, 10, 1, 6, 14, 4, 16, 17]:
+    for valor in [8, 5, 10, 11, 9, 12, 13]:
         arv.inserir(valor)
 
     print("\nÁrvore inicial:")
@@ -164,14 +189,22 @@ if __name__ == "__main__":
 
     print("\nRemovendo 10...")
     arv.remover(10)
-    arv.remover(999)
     arv.mostrar()
 
     print("\nNós folhas:")
     arv.mostrar_folhas()
-    print()
 
     if arv.completa():
-        print("Completa")
+        print("\nCompleta")
     else:
-        print("Não completa")
+        print("\nNão completa")
+
+    if arv.nivel(10) >= 0:
+        print("\nO Nível de 10 é: ", arv.nivel(10))
+    else:
+        print("\n10 não esta na arvore")
+
+    if arv.altura() >= 0:
+        print("\nAltura da arvore: ", arv.altura())
+    else:
+        print("\nArvore vazia")
